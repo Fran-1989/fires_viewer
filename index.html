@@ -1,0 +1,157 @@
+<!DOCTYPE html> 
+<html>
+<head>
+  <title>Visor Incendios</title>
+    <meta charset='utf-8'/>
+    <meta name="author" content="FranciscoJavier" >
+    <meta name="keywords" content="Visor Fran Acuña,Francisco Javier Acuña Parra,Fran,SIG,Incendios,Visor de incendios " >
+	<meta name="description" content="Visor de incendios en Andalucía para TFM">
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.2.0/css/ol.css" type="text/css">
+	<script src="http://openlayers.org/en/v3.2.0/build/ol.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="ol3-layerswitcher-master/src/ol3-layerswitcher.css" type="text/css"/>
+	<script src="ol3-layerswitcher-master/src/ol3-layerswitcher.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	
+	<!-- Se utiliza html5.js para IE menor que 9 (less than) -->
+	<!--[if It IE 9]>
+	<![endif]-->
+    </head>
+    <body>
+<div id="header">
+<h1>Visor de Incendios en Andalucía 2008-2014</h1>
+</div>
+<div id="map"></div>
+<script>	
+	var map = new ol.Map({
+		
+  				layers: 
+					[new ol.layer.Group({
+						'title': 'Capas Base',
+						layers: [
+									
+	
+						new ol.layer.Tile({
+								title: 'Satellite',
+								visible: true,
+								source: new ol.source.MapQuest({layer: 'sat'})
+							}),	
+
+							new ol.layer.Tile({
+								title: 'OSM',
+								visible: false,
+								source: new ol.source.OSM()
+							}),		
+						
+                        	new ol.layer.Tile({
+								title: 'Provincias',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:provincias'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),		
+							
+								    new ol.layer.Tile({
+								title: 'Parques Naturales',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:parques_naturales'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),	
+							
+								new ol.layer.Tile({
+								title: 'Embalses',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:embalses'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),
+							
+						new ol.layer.Tile({
+								title: 'Incendios',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:incendios'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),
+											]
+					}),
+			        new ol.layer.Group({
+						title: 'Capas Análisis',
+						layers: [
+						
+						new ol.layer.Tile({
+								title: 'Incendios-Provincias',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:incendios_provincias'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),
+						
+						
+							new ol.layer.Tile({
+								title: 'Incendios-PN',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:incendios_pn'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),
+						
+						
+						    new ol.layer.Tile({
+								title: 'Distancia Inc-Emb',
+								visible: false,
+								source: new ol.source.TileWMS({
+								 url: 'http://localhost:8080/geoserver/incendios/wms',
+								 params: {'LAYERS': 'incendios:distancia'},
+								 serverType: 'geoserver',
+								 
+								})
+							}),	
+							
+						]
+
+					})
+					
+					
+					],	 
+					target: 'map',
+					view: new ol.View({
+						center: ol.proj.transform([ -4.449462890625, 37.65773212628274], 'EPSG:4326', 'EPSG:3857'),
+						zoom: 7
+						
+			  })
+			}); 
+			
+			var layerSwitcher = new ol.control.LayerSwitcher({
+				tipLabel: 'Leyenda'
+			});
+			map.addControl(layerSwitcher);
+			layerSwitcher.showPanel();
+			
+			map.addControl(new ol.control.ZoomSlider());
+			map.addControl(new ol.control.MousePosition());
+			map.addControl(new ol.control.OverviewMap());
+			map.addControl(new ol.control.FullScreen());
+</script>			
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.5.0/ol.js"></script>
+</body>
+</html>
